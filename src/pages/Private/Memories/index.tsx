@@ -138,7 +138,7 @@ const Memories = () => {
 
 	return (
 		<Container maxWidth="xl">
-			<h1>Memorias ❤️</h1>
+			<h1>Memorias 🎆</h1>
 
 			<Box>
 				<Dialog open={open} onClose={handleClose}>
