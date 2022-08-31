@@ -5,7 +5,7 @@ import axiosInstance from "./config";
  * Login
  */
 export const login = async (body: IUser) => {
-	const response = await axiosInstance.post("/api/auth/login", body);
+	const response = await axiosInstance.post("https://sunny-api.onrender.com/api/auth/login", body);
 	return response.data;
 };
 
@@ -13,7 +13,7 @@ export const login = async (body: IUser) => {
  * Get User
  */
 export const getUser = async () => {
-	const response = await axiosInstance.get("/api/auth/getUser");
+	const response = await axiosInstance.get("https://sunny-api.onrender.com/api/auth/getUser");
 	return response.data;
 };
 
@@ -21,6 +21,6 @@ export const getUser = async () => {
  * Logout
  */
 export const logout = async () => {
-	const response = await axiosInstance.get("/api/auth/logout");
+	const response = await axiosInstance.get("https://sunny-api.onrender.com/api/auth/logout");
 	return response.data;
 };
