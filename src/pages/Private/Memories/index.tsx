@@ -32,6 +32,7 @@ import * as Yup from "yup";
 import { ErrorMessage, Field, Form, Formik, FormikHelpers } from "formik";
 import { useSelector } from "react-redux";
 import { AppStore } from "../../../redux/store";
+import ExpiredSessionDialog from "../../../components/ExpiredSessionDialog";
 
 interface IMessageProps {
 	msg: string | undefined;
@@ -46,6 +47,7 @@ const Memories = () => {
 	const [fileName, setFileName] = useState<string | undefined>(undefined);
 	const [message, setMessage] = useState<IMessageProps | undefined>(undefined);
 	const [openAlert, setOpenAlert] = useState(false);
+	const [openAlertExpired, setOpenAlertExpired] = useState(false);
 	const skeletonItems = ["1", "2", "3", "4", "5", "6"];
 	const userState = useSelector((store: AppStore) => store.user);
 
@@ -125,21 +127,27 @@ const Memories = () => {
 
 	//*OTHER
 	const fetchMemories = async () => {
-		const res = await getMemories();
-		setMemories(res.data);
-		setLoading(false);
+		try {
+			const res = await getMemories();
+			setMemories(res.data);
+			setLoading(false);
+		} catch (error) {
+			setMemories([]);
+			setLoading(true);
+			setOpenAlertExpired(true);
+		}
+		
 	};
 
 	//*USE EFFECT -> se ejecutará cada vez que el componente se renderice
 	useEffect(() => {
-		// recupera todas las historias del API
 		fetchMemories();
 	}, [memories]);
 
 	return (
 		<Container maxWidth="xl">
-			<h1>Memorias 🎆</h1>
-
+			<ExpiredSessionDialog open={openAlertExpired} />
+			<h1>Memorias ❤️</h1>
 			<Box>
 				<Dialog open={open} onClose={handleClose}>
 					<DialogTitle>Crear nueva memoria</DialogTitle>

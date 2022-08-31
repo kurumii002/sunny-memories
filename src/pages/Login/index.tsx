@@ -22,7 +22,7 @@ import * as Yup from "yup";
 import { ErrorMessage, Field, Form, Formik, FormikHelpers } from "formik";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { AxiosError } from "axios";
+import axios, { AxiosError } from "axios";
 import { MainBar } from "../../layout";
 import { PrivateRoutes } from "../../routes/routes";
 
@@ -46,20 +46,15 @@ const Login = () => {
 		password: Yup.string().required("Ingrese su contraseña"),
 	});
 
-
 	//*OTHER
 	const fetchFact = async () => {
-		const res = await fetch("https://api.api-ninjas.com/v1/facts?limit=1",
-			{
-				method: "GET",
-				headers: {
-					"Content-Type": "application/json",
-					"X-Api-Key": `${process.env.REACT_APP_FACT_API_KEY}`
-				}
-			});
-		
-		const data = await res.json();
-		setFact(data[0].fact);
+		const res = await axios.get("https://api.api-ninjas.com/v1/facts?limit=1", {
+			headers: {
+				"Content-Type": "application/json",
+				"X-Api-Key": `${process.env.REACT_APP_FACT_API_KEY}`,
+			},
+		});
+		setFact(res.data[0].fact);
 	};
 
 	//*USE EFFECT
@@ -71,26 +66,28 @@ const Login = () => {
 	const handleSubmit = async (data: IUser, form: FormikHelpers<IUser>) => {
 		form.setSubmitting(true);
 
-		//se hace la peticion al API
 		try {
-			const res = await authService.login(data);
+			//crea la sesion
+			await authService.login(data);
 			form.setSubmitting(false);
 
-			//guarda el usuario en el store
+			//obtiene los datos y lo guarda en el store
+			const res = await authService.getUser();
 			dispatch(createUser(res.user));
+
 			//redirige a las rutas privadas
 			navigate(`/${PrivateRoutes.PRIVATE}`, { replace: true });
 
 		} catch (error) {
-			console.log("error", error);
-
 			if (error instanceof AxiosError) {
 				const error_msg = error.response?.data;
 				setErrorMessage(error_msg.error);
+
 			} else {
+				console.log("error", error);
 				setErrorMessage("Ocurrió un error inesperado...");
 			}
-			
+
 			//que muestre la alerta x 5 seg
 			setOpenAlert(true);
 			setTimeout(() => {

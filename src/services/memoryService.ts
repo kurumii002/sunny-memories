@@ -6,12 +6,8 @@ import axiosInstance from "./config";
  * @returns
  */
 export const getMemories = async () => {
-	try {
-		const response = await axiosInstance.get("/memories/");
-		return response.data;
-	} catch (error) {
-		return (error as Error).message;
-	}
+	const response = await axiosInstance.get("/api/memories/");
+	return response.data;
 };
 
 // /**
@@ -37,7 +33,7 @@ export const uploadImage = async (image: string) => {
 	formData.append("img", image);
 
 	try {
-		const response = await axiosInstance.post("/memories/upload", formData, {
+		const response = await axiosInstance.post("/api/memories/upload", formData, {
 			headers: {
 				"Content-Type": "multipart/form-data",
 			},
@@ -53,7 +49,7 @@ export const uploadImage = async (image: string) => {
  */
 export const createMemory = async (body: IMemory) => {
 	try {
-		const response = await axiosInstance.post("/memories", body);
+		const response = await axiosInstance.post("/api/memories", body);
 		return response.data;
 	} catch (error) {
 		console.log(error);
