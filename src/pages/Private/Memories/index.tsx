@@ -179,6 +179,7 @@ const Memories = () => {
 										variant="standard"
 										fullWidth
 										required
+										error={Boolean(props.touched.name && props.errors.name)}
 										helperText={<ErrorMessage name="name" />}
 										InputProps={{
 											startAdornment: (
@@ -199,6 +200,7 @@ const Memories = () => {
 										variant="standard"
 										fullWidth
 										required
+										error={Boolean(props.touched.description && props.errors.description)}
 										helperText={<ErrorMessage name="description" />}
 										InputProps={{
 											startAdornment: (

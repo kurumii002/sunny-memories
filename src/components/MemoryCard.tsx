@@ -11,14 +11,15 @@ import {
 	Avatar,
 	IconButton,
 	IconButtonProps,
-	Typography
+	Typography,
+	Tooltip,
 } from "@mui/material";
 import { red } from "@mui/material/colors";
 import { IMemory } from "../typings";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import VisibilityRoundedIcon from "@mui/icons-material/VisibilityRounded";
-import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
+import OpenInNewTwoToneIcon from "@mui/icons-material/OpenInNewTwoTone";
+import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 
 interface ExpandMoreProps extends IconButtonProps {
 	expand: boolean;
@@ -52,11 +53,6 @@ const MemoryCard = ({ memory }: IMemoryCardProps) => {
 				avatar={
 					<Avatar sx={{ bgcolor: red[500] }} alt="User avatar" src={memory.author.avatarUrl} />
 				}
-				action={
-					<IconButton>
-						<MoreVertIcon />
-					</IconButton>
-				}
 				title={memory.author.username}
 				subheader={new Date(memory.createdOn).toLocaleDateString()}
 			/>
@@ -72,16 +68,20 @@ const MemoryCard = ({ memory }: IMemoryCardProps) => {
 				</Typography>
 			</CardContent>
 			<CardActions disableSpacing>
-				<IconButton>
-					<FavoriteRoundedIcon />
-				</IconButton>
-				<IconButton
-					onClick={() => {
-						window.open(memory.imageUrl, "_blank")!.focus();
-					}}
-				>
-					<VisibilityRoundedIcon />
-				</IconButton>
+				<Tooltip title="Ver imagen">
+					<IconButton
+						onClick={() => {
+							window.open(memory.imageUrl, "_blank")!.focus();
+						}}
+					>
+						<OpenInNewTwoToneIcon />
+					</IconButton>
+				</Tooltip>
+				<Tooltip title="Acciones">
+					<IconButton>
+						<EditTwoToneIcon />
+					</IconButton>
+				</Tooltip>
 				<ExpandMore expand={expanded} onClick={handleExpandClick}>
 					<ExpandMoreIcon />
 				</ExpandMore>

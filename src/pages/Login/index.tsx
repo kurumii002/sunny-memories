@@ -155,7 +155,7 @@ const Login = () => {
 												variant="standard"
 												fullWidth
 												required
-												error={props.touched.username && props.errors.username}
+												error={Boolean(props.touched.username && props.errors.username)}
 												helperText={<ErrorMessage name="username" />}
 												InputProps={{
 													startAdornment: (
@@ -176,7 +176,7 @@ const Login = () => {
 												variant="standard"
 												fullWidth
 												required
-												error={props.touched.username && props.errors.username}
+												error={Boolean(props.touched.password && props.errors.password)}
 												helperText={<ErrorMessage name="password" />}
 												InputProps={{
 													startAdornment: (
