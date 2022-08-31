@@ -6,7 +6,7 @@ import axiosInstance from "./config";
  * @returns
  */
 export const getMemories = async () => {
-	const response = await axiosInstance.get("https://sunny-api.onrender.com/api/memories/");
+	const response = await axiosInstance.get("/memories/");
 	return response.data;
 };
 
@@ -33,7 +33,7 @@ export const uploadImage = async (image: string) => {
 	formData.append("img", image);
 
 	try {
-		const response = await axiosInstance.post("https://sunny-api.onrender.com/api/memories/upload", formData, {
+		const response = await axiosInstance.post("/memories/upload", formData, {
 			headers: {
 				"Content-Type": "multipart/form-data",
 			},
@@ -49,7 +49,7 @@ export const uploadImage = async (image: string) => {
  */
 export const createMemory = async (body: IMemory) => {
 	try {
-		const response = await axiosInstance.post("https://sunny-api.onrender.com/api/memories", body);
+		const response = await axiosInstance.post("/memories", body);
 		return response.data;
 	} catch (error) {
 		console.log(error);
