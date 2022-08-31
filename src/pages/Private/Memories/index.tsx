@@ -49,16 +49,14 @@ const Memories = () => {
 	const [openAlert, setOpenAlert] = useState(false);
 	const [openAlertExpired, setOpenAlertExpired] = useState(false);
 	const skeletonItems = ["1", "2", "3", "4", "5", "6"];
-	const userState = useSelector((store: AppStore) => store.user);
 
 	//*FORMIK
-	const initialValues: IMemory = {
+	const initialValues = {
 		name: "",
 		description: "",
-		author: "",
 		createdOn: new Date(),
 		imageUrl: "",
-	};
+	} as IMemory;
 	const validationSchema = Yup.object().shape({
 		name: Yup.string().required("El nombre es requerido"),
 		description: Yup.string().required("La descripción es requerida"),
@@ -86,16 +84,12 @@ const Memories = () => {
 		//se agrega la url de la imagen
 		const image_url = await uploadImage(file);
 		if (image_url) {
-			values.imageUrl = image_url.data;
-			values.author = userState.username;
+			try {
+				values.imageUrl = image_url.data;
+				values.createdOn = new Date();
+				await createMemory(values); //hace la peticion al API
 
-			//se hace la peticion al API
-			const response = await createMemory(values);
-			if (response) {
-				//si se crea
 				form.setSubmitting(false);
-				values.createdOn = new Date(); //establece la fecha mas reciente
-
 				setMessage({ msg: "Historia creada correctamente", color: "success" });
 				setOpenAlert(true);
 				setTimeout(() => {
@@ -104,15 +98,14 @@ const Memories = () => {
 				}, 2_000);
 				form.resetForm();
 
-				return;
-			} else {
-				//si no se crea
+			} catch (error) {
 				setMessage({ msg: "Hubo un error al crear", color: "error" });
 				setOpenAlert(true);
 				setTimeout(() => {
 					setOpenAlert(false);
 				}, 5_000);
 			}
+
 		} else {
 			setMessage({
 				msg: "La imagen es obligatoria",
@@ -136,7 +129,6 @@ const Memories = () => {
 			setLoading(true);
 			setOpenAlertExpired(true);
 		}
-		
 	};
 
 	//*USE EFFECT -> se ejecutará cada vez que el componente se renderice
@@ -279,7 +271,7 @@ const Memories = () => {
 				{memories &&
 					memories.map((memo, id) => (
 						<Grid item xs={6} sm={3} key={id}>
-							<MemoryCard memory={memo} userAvatar={userState.avatarUrl} />
+							<MemoryCard memory={memo} />
 						</Grid>
 					))}
 				{loading &&

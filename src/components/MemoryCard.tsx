@@ -37,9 +37,8 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 
 interface IMemoryCardProps {
 	memory: IMemory;
-	userAvatar?: string;
 }
-const MemoryCard = ({ memory, userAvatar }: IMemoryCardProps) => {
+const MemoryCard = ({ memory }: IMemoryCardProps) => {
 	//*STATE
 	const [expanded, setExpanded] = React.useState(false);
 	//*HANDLER
@@ -51,14 +50,14 @@ const MemoryCard = ({ memory, userAvatar }: IMemoryCardProps) => {
 		<Card sx={{ maxWidth: 345 }}>
 			<CardHeader
 				avatar={
-					<Avatar sx={{ bgcolor: red[500] }} alt="User avatar" src={userAvatar} />
+					<Avatar sx={{ bgcolor: red[500] }} alt="User avatar" src={memory.author.avatarUrl} />
 				}
 				action={
 					<IconButton>
 						<MoreVertIcon />
 					</IconButton>
 				}
-				title={memory.author}
+				title={memory.author.username}
 				subheader={new Date(memory.createdOn).toLocaleDateString()}
 			/>
 			<CardMedia

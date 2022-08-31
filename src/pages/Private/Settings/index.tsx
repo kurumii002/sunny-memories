@@ -16,7 +16,7 @@ import { useDispatch } from "react-redux";
 import { PublicRoutes } from "../../../routes/routes";
 import { resetUser } from "../../../redux/states/user";
 import { ColorModeContext } from "../../../theme/ColorModeContext";
-import * as authService from "../../../services";
+import { authService } from "../../../services";
 
 const UserProfile = () => {
 	//*HOOKS
@@ -34,11 +34,11 @@ const UserProfile = () => {
 	};
 
 	const handleLogout = async () => {
-		const res = await authService.logout();
-		console.log("res", res);
+		await authService.logout();
 
 		//elimina el usuario del store
 		dispatch(resetUser());
+		
 		//redirige al login
 		navigate(PublicRoutes.LOGIN, { replace: true });
 	};

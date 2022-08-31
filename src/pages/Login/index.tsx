@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import LoginTwoToneIcon from "@mui/icons-material/LoginTwoTone";
-import * as authService from "../../services";
+import { authService } from "../../services";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import CloseIcon from "@mui/icons-material/Close";
@@ -22,9 +22,12 @@ import * as Yup from "yup";
 import { ErrorMessage, Field, Form, Formik, FormikHelpers } from "formik";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { MainBar } from "../../layout";
 import { PrivateRoutes } from "../../routes/routes";
+import jwt_decode from "jwt-decode";
+import axios from "../../services/config";
+import Cookies from "universal-cookie";
 
 const Login = () => {
 	//*HOOKS
@@ -67,13 +70,18 @@ const Login = () => {
 		form.setSubmitting(true);
 
 		try {
-			//crea la sesion
-			await authService.login(data);
-			form.setSubmitting(false);
+			//obtiene el token y lo establece en la cabecera
+			const session = await authService.login(data);
+			axios.defaults.headers.common = { Authorization: `Bearer ${session.token}` };
 
-			//obtiene los datos y lo guarda en el store
-			const res = await authService.getUser();
-			dispatch(createUser(res.user));
+			//guarda los datos en el store y en la cookie
+			const session_data = jwt_decode(session.token);
+			dispatch(createUser(session_data));
+			console.log("session", session_data);
+			const cookies = new Cookies();
+			//const exp = Number((session_data as any).exp);
+			//cookies.set("session", session_data, { expires: new Date(exp) });
+			form.setSubmitting(false);
 
 			//redirige a las rutas privadas
 			navigate(`/${PrivateRoutes.PRIVATE}`, { replace: true });

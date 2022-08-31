@@ -1,26 +1,18 @@
 import { IUser } from "../typings";
-import axiosInstance from "./config";
+import axios from "./config";
 
 /**
  * Login
  */
 export const login = async (body: IUser) => {
-	const response = await axiosInstance.post("/auth/login", body);
+	const response = await axios.post("/auth/login", body);
 	return response.data;
 };
 
 /**
- * Get User
- */
-export const getUser = async () => {
-	const response = await axiosInstance.get("/auth/getUser");
-	return response.data;
-};
-
-/**
- * Logout
+ * Logout, elimina cookies
  */
 export const logout = async () => {
-	const response = await axiosInstance.get("/auth/logout");
-	return response.data;
+	axios.defaults.headers.common = { Authorization: "" };
+	//TODO
 };

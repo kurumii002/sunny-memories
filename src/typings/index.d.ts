@@ -2,7 +2,7 @@ export interface IMemory {
 	name: string;
 	description: string;
 	createdOn: Date;
-	author: string;
+	author: Omit<IUser, "password">;
 	imageUrl: string;
 }
 
