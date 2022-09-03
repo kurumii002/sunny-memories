@@ -12,16 +12,13 @@ import {
 import Brightness4TwoToneIcon from "@mui/icons-material/Brightness4TwoTone";
 import MeetingRoomTwoToneIcon from "@mui/icons-material/MeetingRoomTwoTone";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import { PublicRoutes } from "../../../routes/routes";
-import { resetUser } from "../../../redux/states/user";
 import { ColorModeContext } from "../../../theme/ColorModeContext";
 import { authService } from "../../../services";
 
 const UserProfile = () => {
 	//*HOOKS
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
 	const { toggleColorMode } = useContext(ColorModeContext);
 	
 	//*STATES
@@ -34,13 +31,9 @@ const UserProfile = () => {
 	};
 
 	const handleLogout = async () => {
-		await authService.logout();
-
-		//elimina el usuario del store
-		dispatch(resetUser());
-		
+		authService.logout();
 		//redirige al login
-		navigate(PublicRoutes.LOGIN, { replace: true });
+		navigate(`/${PublicRoutes.LOGIN}`, { replace: true });
 	};
 
 	return (

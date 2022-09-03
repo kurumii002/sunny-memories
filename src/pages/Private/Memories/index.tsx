@@ -30,9 +30,8 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import CardSkeleton from "../../../components/CardSkeleton";
 import * as Yup from "yup";
 import { ErrorMessage, Field, Form, Formik, FormikHelpers } from "formik";
-import { useSelector } from "react-redux";
-import { AppStore } from "../../../redux/store";
 import ExpiredSessionDialog from "../../../components/ExpiredSessionDialog";
+import { AxiosError } from "axios";
 
 interface IMessageProps {
 	msg: string | undefined;
@@ -124,10 +123,16 @@ const Memories = () => {
 			const res = await getMemories();
 			setMemories(res.data);
 			setLoading(false);
+
 		} catch (error) {
 			setMemories([]);
 			setLoading(true);
-			setOpenAlertExpired(true);
+
+			if(error instanceof AxiosError) {
+				if(error.response?.status === 401) {
+					setOpenAlertExpired(true);
+				}
+			}
 		}
 	};
 

@@ -6,10 +6,9 @@ import {
 	DialogContentText,
 	DialogTitle,
 } from "@mui/material";
-import { useDispatch } from "react-redux";
-import { resetUser } from "../redux/states/user";
 import { useNavigate } from "react-router-dom";
 import { PublicRoutes } from "../routes/routes";
+import { authService } from "../services";
 
 interface Props {
 	open: boolean;
@@ -17,12 +16,10 @@ interface Props {
 const ExpiredSessionDialog = ({ open = false }: Props) => {
 	//*HOOKS
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
 
 	//*HANDLERS
 	const handleClick = async () => {
-		//elimina el usuario en el store
-		dispatch(resetUser());
+		authService.logout();
 		//redirige al login
 		navigate(`/${PublicRoutes.LOGIN}`, { replace: true });
 	};

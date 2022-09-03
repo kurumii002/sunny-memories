@@ -1,3 +1,4 @@
+import { cookieService } from ".";
 import { IMemory } from "../typings";
 import axios from "./config";
 
@@ -6,6 +7,7 @@ import axios from "./config";
  * @returns
  */
 export const getMemories = async () => {
+	axios.defaults.headers.common = { Authorization: `Bearer ${cookieService.getSessionCookie()}` };
 	const response = await axios.get("/memories/");
 	return response.data;
 };
@@ -33,6 +35,7 @@ export const uploadImage = async (image: string) => {
 	formData.append("img", image);
 
 	try {
+		axios.defaults.headers.common = { Authorization: `Bearer ${cookieService.getSessionCookie()}` };
 		const response = await axios.post("/memories/upload", formData, {
 			headers: {
 				"Content-Type": "multipart/form-data",
@@ -48,6 +51,7 @@ export const uploadImage = async (image: string) => {
  * Crea una memoria
  */
 export const createMemory = async (body: IMemory) => {
+	axios.defaults.headers.common = { Authorization: `Bearer ${cookieService.getSessionCookie()}` };
 	const response = await axios.post("/memories", body);
 	return response.data;
 };
@@ -59,6 +63,7 @@ export const createMemory = async (body: IMemory) => {
 //  */
 // export const deleteStory = async (storyID) => {
 // 	try {
+//		axios.defaults.headers.common = { Authorization: `Bearer ${cookieService.getSessionCookie()}` };
 // 		const response = await axios.delete(`/api/v1/story/destroy/${storyID}`);
 // 		return response.data;
 // 	} catch (error) {

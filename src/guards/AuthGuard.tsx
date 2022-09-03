@@ -1,14 +1,10 @@
-import { useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router-dom";
-import { AppStore } from "../redux/store";
 import { PublicRoutes } from "../routes/routes";
+import { authService } from "../services";
 
 const AuthGuard = () => {
-	//si esta logeado el usuario debe estar en el store
-	const userState = useSelector((store: AppStore) => store.user);
-
 	//si no esta autenticado que vaya al login
-	if(!userState.username) {
+	if(!authService.isValidSession()) {
 		return <Navigate replace to={PublicRoutes.LOGIN} />;
 	}
 

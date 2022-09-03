@@ -12,4 +12,17 @@ export interface IUser {
 	password: string;
 }
 
+export interface ISession {
+	username: string;
+	avatarUrl: string;
+	iat: number;
+	exp: number;
+}
+
+export interface ILoginResponse {
+	error?: string;
+	message: string;
+	token: string;
+}
+
 export type IUserInfo = Pick<IUser, "username" | "avatarUrl">;

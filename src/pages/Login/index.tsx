@@ -11,28 +11,22 @@ import {
 } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import LoginTwoToneIcon from "@mui/icons-material/LoginTwoTone";
-import { authService } from "../../services";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import CloseIcon from "@mui/icons-material/Close";
-import { useDispatch } from "react-redux";
-import { createUser } from "../../redux/states/user";
+import { authService } from "../../services";
 import { IUser } from "../../typings";
 import * as Yup from "yup";
 import { ErrorMessage, Field, Form, Formik, FormikHelpers } from "formik";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { AxiosError } from "axios";
 import { MainBar } from "../../layout";
 import { PrivateRoutes } from "../../routes/routes";
-import jwt_decode from "jwt-decode";
 import axios from "../../services/config";
-import Cookies from "universal-cookie";
 
 const Login = () => {
 	//*HOOKS
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
 
 	//*STATES
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -70,32 +64,15 @@ const Login = () => {
 		form.setSubmitting(true);
 
 		try {
-			//obtiene el token y lo establece en la cabecera
-			const session = await authService.login(data);
-			axios.defaults.headers.common = { Authorization: `Bearer ${session.token}` };
-
-			//guarda los datos en el store y en la cookie
-			const session_data = jwt_decode(session.token);
-			dispatch(createUser(session_data));
-			console.log("session", session_data);
-			const cookies = new Cookies();
-			//const exp = Number((session_data as any).exp);
-			//cookies.set("session", session_data, { expires: new Date(exp) });
+			//obtiene el token, lo establece en la cabecera y la cookie
+			await authService.login(data);
+			//estado del form: submitting
 			form.setSubmitting(false);
-
 			//redirige a las rutas privadas
 			navigate(`/${PrivateRoutes.PRIVATE}`, { replace: true });
 
 		} catch (error) {
-			if (error instanceof AxiosError) {
-				const error_msg = error.response?.data;
-				setErrorMessage(error_msg.error);
-
-			} else {
-				console.log("error", error);
-				setErrorMessage("Ocurrió un error inesperado...");
-			}
-
+			setErrorMessage((error as Error).message);
 			//que muestre la alerta x 5 seg
 			setOpenAlert(true);
 			setTimeout(() => {
